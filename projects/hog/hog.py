@@ -18,11 +18,40 @@ def roll_dice(num_rolls, dice=six_sided):
     dice:       A function that simulates a single dice roll outcome.
     """
     # These assert statements ensure that num_rolls is a positive integer.
-    assert type(num_rolls) == int, 'num_rolls must be an integer.'
-    assert num_rolls > 0, 'Must roll at least once.'
+    assert type(num_rolls) == int, "num_rolls must be an integer."
+    assert num_rolls > 0, "Must roll at least once."
     # BEGIN PROBLEM 1
-    "*** YOUR CODE HERE ***"
+    res = 0
+    has_pigout = False
+    while num_rolls > 0:
+        cur_point = dice()
+        if cur_point == 1:  # Pig Out
+            has_pigout = True
+        else:
+            res += cur_point
+        num_rolls -= 1
+    return 1 if has_pigout else res
     # END PROBLEM 1
+
+
+def to_list(cube):
+    list = []
+    while cube > 0:
+        list.append(cube % 10)
+        cube //= 10
+    return list
+
+
+def sum_list(list):
+    res = 0
+    is_odd = True
+    while list:
+        if is_odd:
+            res += list.pop()
+        else:
+            res -= list.pop()
+        is_odd = not is_odd
+    return res
 
 
 def free_bacon(score):
@@ -30,9 +59,11 @@ def free_bacon(score):
 
     score:  The opponent's current score.
     """
-    assert score < 100, 'The game should be over.'
+    assert score < 100, "The game should be over."
     # BEGIN PROBLEM 2
-    "*** YOUR CODE HERE ***"
+    cube = pow(score, 3)
+    list = to_list(cube)
+    return 1 + abs(sum_list(list))
     # END PROBLEM 2
 
 
@@ -45,12 +76,15 @@ def take_turn(num_rolls, opponent_score, dice=six_sided):
     dice:            A function that simulates a single dice roll outcome.
     """
     # Leave these assert statements here; they help check for errors.
-    assert type(num_rolls) == int, 'num_rolls must be an integer.'
-    assert num_rolls >= 0, 'Cannot roll a negative number of dice in take_turn.'
-    assert num_rolls <= 10, 'Cannot roll more than 10 dice.'
-    assert opponent_score < 100, 'The game should be over.'
+    assert type(num_rolls) == int, "num_rolls must be an integer."
+    assert num_rolls >= 0, "Cannot roll a negative number of dice in take_turn."
+    assert num_rolls <= 10, "Cannot roll more than 10 dice."
+    assert opponent_score < 100, "The game should be over."
     # BEGIN PROBLEM 3
-    "*** YOUR CODE HERE ***"
+    if num_rolls == 0:
+        return free_bacon(opponent_score)
+    else:
+        return roll_dice(num_rolls, dice)
     # END PROBLEM 3
 
 
@@ -59,7 +93,12 @@ def is_swap(player_score, opponent_score):
     Return whether the two scores should be swapped
     """
     # BEGIN PROBLEM 4
-    "*** YOUR CODE HERE ***"
+    cube = 3 ** (player_score + opponent_score)
+    list = to_list(cube)
+    if list[0] == list[len(list) - 1]:
+        return True
+    else:
+        return False
     # END PROBLEM 4
 
 
@@ -98,13 +137,31 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     feral_hogs: A boolean indicating whether the feral hogs rule should be active.
     """
     who = 0  # Who is about to take a turn, 0 (first) or 1 (second)
+    score0_copy, score1_copy = 0, 0
     # BEGIN PROBLEM 5
-    "*** YOUR CODE HERE ***"
-    # END PROBLEM 5
-    # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
-    # BEGIN PROBLEM 6
-    "*** YOUR CODE HERE ***"
-    # END PROBLEM 6
+    while score0 < goal and score1 < goal:
+        if who == 0:
+            num = strategy0(score0, score1)
+            point = take_turn(num, score1, dice)
+            if feral_hogs:
+                if abs(num - score0_copy) == 2:
+                    score0 += 3
+                score0_copy = point
+            score0 += point
+        else:
+            num = strategy1(score1, score0)
+            point = take_turn(num, score0, dice)
+            if feral_hogs:
+                if abs(num - score1_copy) == 2:
+                    score1 += 3
+                score1_copy = point
+            score1 += point
+
+        if is_swap(score0, score1):
+            score0, score1 = score1, score0
+
+        who = other(who)
+        # END PROBLEM 5
     return score0, score1
 
 
@@ -117,6 +174,7 @@ def say_scores(score0, score1):
     """A commentary function that announces the score for each player."""
     print("Player 0 now has", score0, "and Player 1 now has", score1)
     return say_scores
+
 
 def announce_lead_changes(prev_leader=None):
     """Return a commentary function that announces lead changes.
@@ -131,6 +189,7 @@ def announce_lead_changes(prev_leader=None):
     >>> f5 = f4(15, 13)
     Player 0 takes the lead by 2
     """
+
     def say(score0, score1):
         if score0 > score1:
             leader = 0
@@ -139,9 +198,11 @@ def announce_lead_changes(prev_leader=None):
         else:
             leader = None
         if leader != None and leader != prev_leader:
-            print('Player', leader, 'takes the lead by', abs(score0 - score1))
+            print("Player", leader, "takes the lead by", abs(score0 - score1))
         return announce_lead_changes(leader)
+
     return say
+
 
 def both(f, g):
     """Return a commentary function that says what f says, then what g says.
@@ -159,8 +220,10 @@ def both(f, g):
     Player 0 now has 6 and Player 1 now has 17
     Player 1 takes the lead by 11
     """
+
     def say(score0, score1):
         return both(f(score0, score1), g(score0, score1))
+
     return say
 
 
@@ -187,7 +250,7 @@ def announce_highest(who, prev_high=0, prev_score=0):
     >>> f10 = f9(33, 77) # Swap!
     55 point(s)! That's the biggest gain yet for Player 1
     """
-    assert who == 0 or who == 1, 'The who argument should indicate a player.'
+    assert who == 0 or who == 1, "The who argument should indicate a player."
     # BEGIN PROBLEM 7
     "*** YOUR CODE HERE ***"
     # END PROBLEM 7
@@ -211,8 +274,10 @@ def always_roll(n):
     >>> strategy(99, 99)
     5
     """
+
     def strategy(score, opponent_score):
         return n
+
     return strategy
 
 
@@ -269,22 +334,21 @@ def run_experiments():
     """Run a series of strategy experiments and report results."""
     if True:  # Change to False when done finding max_scoring_num_rolls
         six_sided_max = max_scoring_num_rolls(six_sided)
-        print('Max scoring num rolls for six-sided dice:', six_sided_max)
+        print("Max scoring num rolls for six-sided dice:", six_sided_max)
 
     if False:  # Change to True to test always_roll(8)
-        print('always_roll(8) win rate:', average_win_rate(always_roll(8)))
+        print("always_roll(8) win rate:", average_win_rate(always_roll(8)))
 
     if False:  # Change to True to test bacon_strategy
-        print('bacon_strategy win rate:', average_win_rate(bacon_strategy))
+        print("bacon_strategy win rate:", average_win_rate(bacon_strategy))
 
     if False:  # Change to True to test swap_strategy
-        print('swap_strategy win rate:', average_win_rate(swap_strategy))
+        print("swap_strategy win rate:", average_win_rate(swap_strategy))
 
     if False:  # Change to True to test final_strategy
-        print('final_strategy win rate:', average_win_rate(final_strategy))
+        print("final_strategy win rate:", average_win_rate(final_strategy))
 
     "*** You may add additional experiments as you wish ***"
-
 
 
 def bacon_strategy(score, opponent_score, margin=8, num_rolls=6):
@@ -315,6 +379,7 @@ def final_strategy(score, opponent_score):
     return 6  # Replace this statement
     # END PROBLEM 12
 
+
 ##########################
 # Command Line Interface #
 ##########################
@@ -330,9 +395,11 @@ def run(*args):
     This function uses Python syntax/techniques not yet covered in this course.
     """
     import argparse
+
     parser = argparse.ArgumentParser(description="Play Hog")
-    parser.add_argument('--run_experiments', '-r', action='store_true',
-                        help='Runs strategy experiments')
+    parser.add_argument(
+        "--run_experiments", "-r", action="store_true", help="Runs strategy experiments"
+    )
 
     args = parser.parse_args()
 
