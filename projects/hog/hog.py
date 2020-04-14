@@ -162,6 +162,11 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
 
         who = other(who)
         # END PROBLEM 5
+
+        # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
+        # BEGIN PROBLEM 6
+        say = say(score0, score1)
+        # END PROBLEM 6
     return score0, score1
 
 
@@ -197,7 +202,7 @@ def announce_lead_changes(prev_leader=None):
             leader = 1
         else:
             leader = None
-        if leader != None and leader != prev_leader:
+        if leader is not None and leader != prev_leader:
             print("Player", leader, "takes the lead by", abs(score0 - score1))
         return announce_lead_changes(leader)
 
@@ -252,7 +257,22 @@ def announce_highest(who, prev_high=0, prev_score=0):
     """
     assert who == 0 or who == 1, "The who argument should indicate a player."
     # BEGIN PROBLEM 7
-    "*** YOUR CODE HERE ***"
+
+    def gain_helper(score):
+        diff = score - prev_score
+        if diff > prev_high:
+            print(diff, "point(s)! That's the biggest gain yet for Player", who)
+            return announce_highest(who, diff, score)
+        else:
+            return announce_highest(who, prev_high, score)
+
+    def biggest_gain(score0, score1):
+        if who == 0:
+            return gain_helper(score0)
+        else:
+            return gain_helper(score1)
+
+    return biggest_gain
     # END PROBLEM 7
 
 
