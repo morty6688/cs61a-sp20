@@ -313,7 +313,17 @@ def make_averaged(g, num_samples=1000):
     3.0
     """
     # BEGIN PROBLEM 8
-    "*** YOUR CODE HERE ***"
+
+    def add_and_return(*args):
+        res = 0
+        n = num_samples
+        while n > 0:
+            res += g(*args)
+            n -= 1
+        return res / num_samples
+
+    return add_and_return
+
     # END PROBLEM 8
 
 
@@ -327,7 +337,15 @@ def max_scoring_num_rolls(dice=six_sided, num_samples=1000):
     1
     """
     # BEGIN PROBLEM 9
-    "*** YOUR CODE HERE ***"
+    res = 1
+    max_value = float("-inf")
+    for i in range(1, 11):
+        roll = make_averaged(roll_dice, num_samples)
+        value = roll(i, dice)
+        if value > max_value:
+            max_value = value
+            res = i
+    return res
     # END PROBLEM 9
 
 
@@ -376,7 +394,10 @@ def bacon_strategy(score, opponent_score, margin=8, num_rolls=6):
     rolls NUM_ROLLS otherwise.
     """
     # BEGIN PROBLEM 10
-    return 6  # Replace this statement
+    if free_bacon(opponent_score) >= margin:
+        return 0
+    else:
+        return num_rolls
     # END PROBLEM 10
 
 
@@ -386,7 +407,14 @@ def swap_strategy(score, opponent_score, margin=8, num_rolls=6):
     non-beneficial swap. Otherwise, it rolls NUM_ROLLS.
     """
     # BEGIN PROBLEM 11
-    return 6  # Replace this statement
+    post_score = score + free_bacon(opponent_score)
+    if is_swap(post_score, opponent_score):
+        if opponent_score > post_score:
+            return 0
+        else:
+            return num_rolls
+    else:
+        return bacon_strategy(score, opponent_score, margin, num_rolls)
     # END PROBLEM 11
 
 
@@ -396,7 +424,7 @@ def final_strategy(score, opponent_score):
     *** YOUR DESCRIPTION HERE ***
     """
     # BEGIN PROBLEM 12
-    return 6  # Replace this statement
+    return swap_strategy(score, opponent_score)
     # END PROBLEM 12
 
 
