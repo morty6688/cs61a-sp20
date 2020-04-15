@@ -2,6 +2,7 @@
 
 # Lambda Functions
 
+
 def lambda_curry2(func):
     """
     Returns a Curried version of a two-argument function FUNC.
@@ -17,8 +18,17 @@ def lambda_curry2(func):
     >>> lambda_curry2(mod)(123)(10)
     3
     """
-    "*** YOUR CODE HERE ***"
-    return ______
+
+    # def g(x):
+    #     def h(y):
+    #         return func(x, y)
+
+    #     return h
+
+    # return g
+
+    return lambda x: lambda y: func(x, y)
+
 
 def count_cond(condition):
     """Returns a function with one parameter N that counts all the numbers from
@@ -47,7 +57,17 @@ def count_cond(condition):
     >>> count_primes(20)   # 2, 3, 5, 7, 11, 13, 17, 19
     8
     """
-    "*** YOUR CODE HERE ***"
+
+    def cal(n):
+        i, count = 1, 0
+        while i <= n:
+            if condition(n, i):
+                count += 1
+            i += 1
+        return count
+
+    return cal
+
 
 def both_paths(sofar="S"):
     """
@@ -60,4 +80,12 @@ def both_paths(sofar="S"):
     >>> _ = leftleft()
     SLL
     """
-    "*** YOUR CODE HERE ***"
+
+    def left():
+        return both_paths(sofar + "L")
+
+    def right():
+        return both_paths(sofar + "R")
+
+    print(sofar)
+    return left, right

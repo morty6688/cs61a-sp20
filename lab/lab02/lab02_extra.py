@@ -4,6 +4,7 @@ from lab02 import *
 
 # Higher Order Functions
 
+
 def compose1(f, g):
     """Return the composition function which given x, computes f(g(x)).
 
@@ -21,6 +22,7 @@ def compose1(f, g):
     """
     return lambda x: f(g(x))
 
+
 def composite_identity(f, g):
     """
     Return a function with one parameter x that returns True if f(g(x)) is
@@ -35,7 +37,8 @@ def composite_identity(f, g):
     >>> b1(4)                            # (4 + 1)^2 != 4^2 + 1
     False
     """
-    "*** YOUR CODE HERE ***"
+    return lambda x: f(g(x)) == g(f(x))
+
 
 def cycle(f1, f2, f3):
     """Returns a function that is itself a higher-order function.
@@ -63,4 +66,15 @@ def cycle(f1, f2, f3):
     >>> do_two_cycles(1)
     19
     """
-    "*** YOUR CODE HERE ***"
+
+    func = [f1, f2, f3]
+
+    def f(n):
+        g = lambda x: x
+        if n == 0:
+            return g
+        for i in range(n):
+            g = compose1(func[i % 3], g)
+        return g
+
+    return f
