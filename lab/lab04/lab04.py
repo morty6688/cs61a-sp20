@@ -127,7 +127,12 @@ def max_subseq(n, l):
     >>> max_subseq(12345, 1)
     5
     """
-    return max_subseq_helper(0, 0, n, l, l)
+    # return max_subseq_helper(0, 0, n, l, l)
+    if n == 0 or l == 0:
+        return 0
+    with_last = max_subseq(n // 10, l - 1) * 10 + n % 10
+    without_last = max_subseq(n // 10, l)
+    return max(with_last, without_last)
 
 
 def max_subseq_helper(cur, res, n, l, max_l):
