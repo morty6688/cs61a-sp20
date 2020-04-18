@@ -89,7 +89,17 @@ def autocorrect(user_word, valid_words, diff_function, limit):
     than LIMIT.
     """
     # BEGIN PROBLEM 5
-    "*** YOUR CODE HERE ***"
+    if user_word in valid_words:
+        return user_word
+    else:
+        min_diff = float("inf")
+        min_word = user_word
+        for valid_word in valid_words:
+            diff = diff_function(user_word, valid_word, limit)
+            if diff <= limit and diff < min_diff:
+                min_diff = diff
+                min_word = valid_word
+        return min_word
     # END PROBLEM 5
 
 
@@ -99,31 +109,60 @@ def sphinx_swap(start, goal, limit):
     their lengths.
     """
     # BEGIN PROBLEM 6
-    assert False, "Remove this line"
+    return sphinx_swap_helper(start, goal, limit, 0)
     # END PROBLEM 6
+
+
+def sphinx_swap_helper(start, goal, limit, res):
+    if res > limit:
+        return res
+    m, n = len(start), len(goal)
+    if m == 0 and n == 0:
+        return res
+    if m > n:
+        return sphinx_swap_helper(start[:n], goal, limit, m - n + res)
+    elif m < n:
+        return sphinx_swap_helper(start, goal[:m], limit, n - m + res)
+    else:
+        return (
+            sphinx_swap_helper(start[1:], goal[1:], limit, res + 1)
+            if start[0] != goal[0]
+            else sphinx_swap_helper(start[1:], goal[1:], limit, res)
+        )
 
 
 def feline_fixes(start, goal, limit):
     """A diff function that computes the edit distance from START to GOAL."""
-    assert False, "Remove this line"
+    m, n = len(start), len(goal)
+    if m == 0:
+        return n
+    elif n == 0:
+        return m
+    d = [[0] * (n + 1) for _ in range(m + 1)]
+    for i in range(m + 1):
+        d[i][0] = i
+    for j in range(n + 1):
+        d[0][j] = j
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if start[i - 1] == goal[j - 1]:
+                d[i][j] = 1 + min(d[i - 1][j], d[i][j - 1], d[i - 1][j - 1] - 1)
+            else:
+                d[i][j] = 1 + min(d[i - 1][j], d[i][j - 1], d[i - 1][j - 1])
+    return d[m][n]
 
-    if ______________:  # Fill in the condition
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
-
-    elif ___________:  # Feel free to remove or add additional cases
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
-
-    else:
-        add_diff = ...  # Fill in these lines
-        remove_diff = ...
-        substitute_diff = ...
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
+    # m, n = len(start), len(goal)
+    # if m == 0:
+    #     return n
+    # elif n == 0:
+    #     return m
+    # elif start[0] == goal[0]:  # Fill in the condition
+    #     return feline_fixes(start[1:], goal[1:], limit)
+    # else:
+    #     add_diff = feline_fixes(start[1:], goal, limit)
+    #     remove_diff = feline_fixes(start, goal[1:], limit)
+    #     substitute_diff = feline_fixes(goal[0] + start[1:], goal, limit)
+    #     return min(add_diff, remove_diff, substitute_diff) + 1
 
 
 def final_diff(start, goal, limit):
