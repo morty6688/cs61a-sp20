@@ -178,7 +178,15 @@ def final_diff(start, goal, limit):
 def report_progress(typed, prompt, id, send):
     """Send a report of your id and progress so far to the multiplayer server."""
     # BEGIN PROBLEM 8
-    "*** YOUR CODE HERE ***"
+    n = 0
+    for i in range(len(typed)):
+        if typed[i] == prompt[i]:
+            n += 1
+        else:
+            break
+    v = n / len(prompt)
+    send({"id": id, "progress": v})
+    return v
     # END PROBLEM 8
 
 
@@ -204,7 +212,10 @@ def time_per_word(times_per_player, words):
         words: a list of words, in the order they are typed.
     """
     # BEGIN PROBLEM 9
-    "*** YOUR CODE HERE ***"
+    times = []
+    for x in times_per_player:
+        times.append([x[i] - x[i - 1] for i in range(1, len(x))])
+    return game(words, times)
     # END PROBLEM 9
 
 
@@ -219,7 +230,16 @@ def fastest_words(game):
     players = range(len(all_times(game)))  # An index for each player
     words = range(len(all_words(game)))  # An index for each word
     # BEGIN PROBLEM 10
-    "*** YOUR CODE HERE ***"
+    res = [[] for _ in players]
+    for word in words:
+        i = 0
+        min_num = float("inf")
+        for player in players:
+            if time(game, player, word) < min_num:
+                i = player
+                min_num = time(game, player, word)
+        res[i].append(word_at(game, word))
+    return res
     # END PROBLEM 10
 
 
@@ -264,7 +284,7 @@ def game_string(game):
     return "game(%s, %s)" % (game[0], game[1])
 
 
-enable_multiplayer = False  # Change to True when you
+enable_multiplayer = True  # Change to True when you
 
 
 ##########################
