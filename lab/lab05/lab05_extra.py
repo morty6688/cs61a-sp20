@@ -72,7 +72,21 @@ def add_trees(t1, t2):
         5
       5
     """
-    "*** YOUR CODE HERE ***"
+    if not t1:
+        return t2
+    if not t2:
+        return t1
+    new_label = label(t1) + label(t2)
+    t1_children, t2_children = branches(t1), branches(t2)
+    len_t1, len_t2 = len(t1_children), len(t2_children)
+    if len_t1 < len_t2:
+        t1_children += [None for _ in range(len_t1, len_t2)]
+    elif len_t1 > len_t2:
+        t2_children += [None for _ in range(len_t2, len_t1)]
+    return tree(
+        new_label,
+        [add_trees(child1, child2) for child1, child2 in zip(t1_children, t2_children)],
+    )
 
 
 # Shakespeare and Dictionaries
@@ -94,8 +108,8 @@ def build_successors_table(tokens):
     prev = "."
     for word in tokens:
         if prev not in table:
-            "*** YOUR CODE HERE ***"
-        "*** YOUR CODE HERE ***"
+            table[prev] = []
+        table[prev] += [word]
         prev = word
     return table
 
@@ -114,7 +128,8 @@ def construct_sent(word, table):
 
     result = ""
     while word not in [".", "!", "?"]:
-        "*** YOUR CODE HERE ***"
+        result += word + " "
+        word = random.choice(table[word])
     return result.strip() + word
 
 
@@ -133,11 +148,14 @@ def shakespeare_tokens(
 
 
 # Uncomment the following two lines
-# tokens = shakespeare_tokens()
-# table = build_successors_table(tokens)
+tokens = shakespeare_tokens()
+table = build_successors_table(tokens)
 
 
 def random_sent():
     import random
 
     return construct_sent(random.choice(table["."]), table)
+
+
+random_sent()
