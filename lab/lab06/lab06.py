@@ -16,7 +16,14 @@ def make_adder_inc(n):
     >>> adder2(5)
     11
     """
-    "*** YOUR CODE HERE ***"
+
+    def adder(x):
+        nonlocal n
+        value = x + n
+        n += 1
+        return value
+
+    return adder
 
 
 def make_fib():
@@ -42,7 +49,15 @@ def make_fib():
     >>> check(this_file, 'make_fib', ['List'])
     True
     """
-    "*** YOUR CODE HERE ***"
+    a, b = 0, 1
+
+    def fib():
+        nonlocal a, b
+        res = a
+        a, b = b, a + b
+        return res
+
+    return fib
 
 
 # Generators
@@ -75,7 +90,8 @@ def scale(it, multiplier):
     >>> [next(m) for _ in range(5)]
     [2, 4, 6, 8, 10]
     """
-    "*** YOUR CODE HERE ***"
+    for i in it:
+        yield i * multiplier
 
 
 def hailstone(n):
@@ -91,5 +107,10 @@ def hailstone(n):
     2
     1
     """
-    "*** YOUR CODE HERE ***"
-
+    while n != 1:
+        yield n
+        if n % 2 == 0:
+            n //= 2
+        else:
+            n = n * 3 + 1
+    yield 1
