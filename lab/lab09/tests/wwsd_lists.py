@@ -7,56 +7,50 @@ test = {
         {
           'code': r"""
           scm> (cons 1 (cons 2 nil))
-          5ceacf97ccefe7d64916c8d72dfb2b48
-          # locked
+          (1 2)
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         },
         {
           'code': r"""
           scm> (car (cons 1 (cons 2 nil)))
-          7cd20da6435c318b417f99ab831ac85e
-          # locked
+          1
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         },
         {
           'code': r"""
           scm> (cdr (cons 1 (cons 2 nil)))
-          36f31b0ebd049141c21558b1c3b4894d
-          # locked
+          (2)
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         },
         {
           'code': r"""
           scm> (list 1 2 3)
-          31df56b0e4230528bca8a8edc01115c8
-          # locked
+          (1 2 3)
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         },
         {
           'code': r"""
           scm> '(1 2 3)
-          31df56b0e4230528bca8a8edc01115c8
-          # locked
+          (1 2 3)
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         },
         {
           'code': r"""
           scm> (cons 1 '(list 2 3))  ; Recall quoting
-          9b9cf94f8db477d48f973c67acf1842a
-          # locked
+          (1 list 2 3)
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         }
       ],
       'scored': True,
@@ -71,11 +65,10 @@ test = {
         {
           'code': r"""
           scm> '(cons 4 (cons (cons 6 8) ()))
-          beed0382fff95ecdd5f05fad62b13daf
-          # locked
+          (cons 4 (cons (cons 6 8) ()))
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         }
       ],
       'scored': True,
