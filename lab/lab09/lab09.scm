@@ -41,11 +41,21 @@
 
 ; expect 13
 ; ; Extra questions
-(define lst 'YOUR-CODE-HERE)
+(define lst
+        (cons (list 1)
+              (cons 2 (cons (list 3 4) (cons 5 nil)))))
 
-(define (composed f g) 'YOUR-CODE-HERE)
+(define (composed f g) (lambda (x) (f (g x))))
 
-(define (remove item lst) 'YOUR-CODE-HERE)
+(define (remove item lst)
+  ;   (cond 
+  ;     ((null? lst)
+  ;      lst)
+  ;     ((= item (car lst))
+  ;      (remove item (cdr lst)))
+  ;     (else
+  ;      (cons (car lst) (remove item (cdr lst)))))
+  (filter-lst (lambda (x) (not (= item x))) lst))
 
 ; ;; Tests
 (remove 3 nil)
@@ -57,8 +67,31 @@
 (remove 5 '(5 3 5 5 1 4 5 4))
 
 ; expect (3 1 4 4)
-(define (no-repeats s) 'YOUR-CODE-HERE)
+(define (no-repeats s)
+  (if (null? s)
+      s
+      (cons (car s)
+            (no-repeats
+             (filter-lst (lambda (x) (not (= (car s) x)))
+                         (cdr s))))))
 
-(define (substitute s old new) 'YOUR-CODE-HERE)
+(define (substitute s old new)
+  (cond 
+    ((null? s)
+     s)
+    ((eq? (car s) old)
+     (cons new (substitute (cdr s) old new)))
+    ((pair? (car s))
+     (cons (substitute (car s) old new)
+           (substitute (cdr s) old new)))
+    (else
+     (cons (car s) (substitute (cdr s) old new)))))
 
-(define (sub-all s olds news) 'YOUR-CODE-HERE)
+(define (sub-all s olds news)
+  (cond 
+    ((null? olds)
+     s)
+    (else
+     (sub-all (substitute s (car olds) (car news))
+              (cdr olds)
+              (cdr news)))))
