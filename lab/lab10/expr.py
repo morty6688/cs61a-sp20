@@ -111,7 +111,7 @@ class Name(Expr):
         >>> print(Name('c').eval(env))
         None
         """
-        "*** YOUR CODE HERE ***"
+        return env[self.string] if self.string in env else None
 
     def __str__(self):
         return self.string
@@ -181,7 +181,9 @@ class CallExpr(Expr):
         >>> read('add(mul(3, 4), b)').eval(new_env)
         Number(14)
         """
-        "*** YOUR CODE HERE ***"
+        operator_function = self.operator.eval(env)
+        operands_value = [_.eval(env) for _ in self.operands]
+        return operator_function.apply(operands_value)
 
     def __str__(self):
         function = str(self.operator)
@@ -301,7 +303,9 @@ class LambdaFunction(Value):
                     comma_separated(self.parameters), comma_separated(arguments)
                 )
             )
-        "*** YOUR CODE HERE ***"
+        new_env = self.parent.copy()
+        new_env.update(dict(zip(self.parameters, arguments)))
+        return self.body.eval(new_env)
 
     def __str__(self):
         definition = LambdaExpr(self.parameters, self.body)
