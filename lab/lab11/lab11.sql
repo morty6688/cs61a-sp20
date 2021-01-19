@@ -1,13 +1,13 @@
 .read sp20data.sql
 
 CREATE TABLE obedience AS
-  SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
+  SELECT seven, instructor FROM students;
 
 CREATE TABLE smallest_int AS
-  SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
+  SELECT time, smallest FROM students WHERE smallest > 2 ORDER BY smallest LIMIT 20;
 
 CREATE TABLE matchmaker AS
-  SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
+  SELECT s1.pet, s1.song, s1.color, s2.color FROM students AS s1, students AS s2 WHERE s1.time < s2.time AND s1.pet = s2.pet AND s1.song = s2.song;
 
 CREATE TABLE parents AS
   SELECT "abraham" AS parent, "barack" AS child UNION
@@ -44,15 +44,15 @@ CREATE TABLE stacks AS
   SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
 
 CREATE TABLE smallest_int_having AS
-  SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
+  SELECT time, smallest FROM students GROUP BY smallest HAVING count(smallest) = 1;
 
 CREATE TABLE sp20favpets AS
-  SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
+  SELECT pet, count(*) AS cnt FROM students GROUP BY pet ORDER BY cnt DESC, pet ASC LIMIT 10;
 
 
 CREATE TABLE sp20dog AS
-  SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
+  SELECT pet, count(*) FROM students WHERE pet = 'dog' GROUP BY pet;
 
 
 CREATE TABLE obedienceimages AS
-  SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
+  SELECT seven, instructor, count(*) FROM students WHERE seven = '7' GROUP BY instructor ORDER BY instructor;
