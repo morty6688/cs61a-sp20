@@ -26,4 +26,4 @@ CREATE TABLE sizes AS
 
 -- The size of each dog
 CREATE TABLE size_of_dogs AS
-  SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
+  SELECT a.name AS name, b.size AS size FROM dogs AS a, sizes AS b WHERE a.height > b.min AND a.height <= b.max;
